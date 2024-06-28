@@ -1,0 +1,26 @@
+@startuml
+!theme vibrant
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Context.puml
+LAYOUT_WITH_LEGEND()
+title Diagrama de contexto para el sistema web de "CAPACITATE"
+Person(usuario, "Usuario", "Usuario que toma capacitaciones")
+Person(administrador, "Administrador", "Empresa que contrata el servicio para sus empleados")
+Person(empleadoCapacitate, "Empleado de CAPACITATE", "Persona que adminsitra los contenidos de las capacitaciones")
+System(sistemaWeb, "Sistema web de CAPACITATE", "Permite al administrador realizar consulta sobre el progreso de sus empleados, al usuario realizar capacitaciones y al empleado de CAPACITATE gestionar los contenidos del sistema")
+System_Ext(sistemaEmail, "Sistema de Email", "Servicios de email de Amazon")
+System_Ext(database2, "Base de datos multimedia", "Servicio de base de datos multimedia de Amazon (AWS)")
+System_Ext(database, "Base de datos", "Servicio de base de datos de Amazon (AWS)")
+Rel(usuario, sistemaWeb, "Usa")
+Rel(empleadoCapacitate, sistemaWeb, "Gestiona")
+Rel(administrador, sistemaWeb, "Usa")
+Rel_Back(usuario, sistemaEmail, "Envía recordatorio por email a")
+Rel_Neighbor(sistemaWeb, sistemaEmail, "Envía email")
+Rel_Neighbor(sistemaWeb, database, "Gestiona la")
+Rel_Neighbor(sistemaWeb, database2, "Gestiona")
+Lay_D(sistemaWeb, database)
+Lay_R(database, database2)
+Rel(database, sistemaWeb, "responde")
+Rel(database2, sistemaWeb, "responde")
+@enduml

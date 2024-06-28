@@ -1,0 +1,31 @@
+@startuml "capacitate"
+!theme vibrant
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Container.puml
+LAYOUT_WITH_LEGEND()
+title Diagrama de Contenedores para el sistema web de "CAPACITATE"
+Person(usuario, "Usuario", "Usuario que toma capacitaciones")
+Person(administrador, "Administrador", "Empresa que contrata el servicio para sus empleados")
+Person(empleadoCapacitate, "Empleado de CAPACITATE", "Persona que administra los contenidos de las capacitaciones")
+System_Boundary(c1, "Sistema web de CAPACITATE") {
+ Container(frontend, "Frontend", "Vue.js, HTML5, CSS3", "Interfaz de usuario interactiva y atractiva")
+ Container(serverless_functions, "Backend", "AWS Lambda", "Lógica de negocio y procesamiento de solicitudes", $tags = "serverless")
+}
+System_Ext(sistemaEmail, "Sistema de Email", "Servicios de email de Amazon (AWS)")
+System_Ext(database, "Base de datos", "Servicio de base de datos de Amazon (AWS)")
+System_Ext(database2, "Base de datos multimedia", "Servicio de base de datos multimedia de Amazon (AWS)")
+Rel(usuario, frontend, "Usa", "HTTPS")
+Rel(administrador, frontend, "Usa", "HTTPS")
+Rel(empleadoCapacitate, frontend, "Gestiona", "HTTPS")
+Rel(frontend, serverless_functions, "Realiza solicitudes a", "HTTPS/JSON")
+Rel(serverless_functions, database, "Consulta y actualiza", "JDBC")
+Rel(serverless_functions, database2, "Gestiona archivos en")
+Rel(serverless_functions, sistemaEmail, "Envía notificaciones a")
+Rel(sistemaEmail, usuario, "Envía mails de recordatorios a")
+Rel(database, serverless_functions, "responde")
+Rel(database2, serverless_functions, "responde")
+Lay_L(administrador,usuario)
+Lay_D(usuario,sistemaEmail)
+SHOW_LEGEND()
+@enduml
