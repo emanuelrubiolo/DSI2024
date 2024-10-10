@@ -1,0 +1,23 @@
+@startuml
+!include <C4/C4_Container>
+
+together {
+  Person(Usuario, "Usuario", "Usuario interactúa con la app web para solicitar cotizaciones y realizar pedidos")
+  
+  System_Boundary(c1, "Sistema de Cotización y Pedidos") {
+    Container(frontend, "Frontend Web", "React.js", "Interfaz de usuario para solicitar cotizaciones y realizar pedidos")
+    Container(backend, "Backend", "API REST en Node.js", "Gestiona la lógica de la aplicación")
+    ContainerDb(db, "Base de Datos", "MySQL", "Almacena datos sobre los usuarios, productos, cotizaciones, órdenes, y detalles de pagos")
+  }
+}
+
+System_Ext(email, "Email", "Se envían mensajes para coordinar pago y envíos de productos")
+System_Ext(mercadoPago, "Checkout API", "API de Mercado Pago para gestionar pagos con tarjeta")
+
+Rel(Usuario, frontend, "Interactúa", "async, JSON/HTTPS")
+Rel(frontend, backend, "Interactúa", "async, JSON/HTTPS")
+Rel_Neighbor(backend, db, "Lee y escribe datos")
+Rel(backend, email, "Envía datos de facturación, pago y envío", "SMTP")
+Rel(backend, mercadoPago, "Procesa pago con tarjeta crédito/débito", "API de Mercado Pago")
+Rel(email, Usuario, "Envía mensajes")
+@enduml
